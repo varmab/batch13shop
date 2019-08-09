@@ -28,17 +28,79 @@ class Shop extends Component{
 
         this.state={
             items:items,
-            cartItems:[]
+            cartItems:[],
+            orderTotal:0
         }
     }
 
     addToCart=(item)=>{
         console.log(JSON.stringify(item))
+
+        var isItemExists=this.state.cartItems.some(function(cartItem){
+            return cartItem.id==item.id;
+        })
+
+        if(isItemExists){
+            var currentItem=this.state.cartItems.find((cartItem)=>{
+                return cartItem.id==item.id
+            })
+
+            currentItem.qty++;
+
+            this.setState({
+                cartItems:this.state.cartItems.filter((cartItem)=>{
+                    return cartItem.id!=currentItem.id
+                })
+            },()=>{
+                this.setState({
+                    cartItems:[
+                            ...this.state.cartItems,
+                            currentItem
+                            ]
+                    },()=>{
+                        this.setState({
+                            orderTotal:this.state.cartItems.reduce(function(total,cartItem){
+                                return total + cartItem.price * cartItem.qty;
+                            },0)
+                        })
+                    });
+            })
+            
+        }
+        else
+        {
+            item.qty=1;
+
+            this.setState({
+                cartItems:[
+                    ...this.state.cartItems,
+                    item
+                ]
+            },()=>{
+                this.setState({
+                    orderTotal:this.state.cartItems.reduce(function(total,cartItem){
+                        return total + cartItem.price * cartItem.qty;
+                    },0)
+                })
+            })
+
+        }
+
+        
+    }
+
+    removeFromCart=(item)=>{
+        console.log(item);
         this.setState({
-            cartItems:[
-                ...this.state.cartItems,
-                item
-            ]
+            cartItems:this.state.cartItems.filter((cartItem)=>{
+                return cartItem.id!=item.id
+            })
+        },()=>{
+            this.setState({
+                orderTotal:this.state.cartItems.reduce(function(total,cartItem){
+                    return total + cartItem.price  * cartItem.qty;
+                },0)
+            })
         })
     }
 
@@ -50,8 +112,8 @@ class Shop extends Component{
                     <Catalog items={this.state.items} addToCart={this.addToCart}/>
                 </div>
                 <div className="column">
-                    <Cart items={this.state.cartItems}/>
-                    <Checkout/>
+                    <Cart items={this.state.cartItems} removeFromCart={this.removeFromCart}/>
+                    <Checkout orderTotal={this.state.orderTotal}/>
                 </div>
             </div>
         )
