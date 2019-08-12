@@ -15,6 +15,7 @@ class Checkout extends Component{
     }
 
     render(){
+        console.log("rendering checkout");
         return(
             <div>
                 <h1>Checkout</h1>

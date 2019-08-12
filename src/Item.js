@@ -18,9 +18,10 @@ class Item extends Component{
     }
 
     render(){
+        console.log("rendering item");
         return(
             <React.Fragment>
-                <h1>{this.state.item.name}</h1>
+                <a href={`/items/${this.state.item.id}`}><h1>{this.state.item.name}</h1></a>
                 <p>Price: {this.state.item.price}</p>
                 {
                     (this.state.isCart==true) ? 

@@ -33,6 +33,9 @@ class Shop extends Component{
         }
     }
 
+    //check if item exists
+    //if item exists, get item and update qty
+    //
     addToCart=(item)=>{
         console.log(JSON.stringify(item))
 
@@ -105,6 +108,7 @@ class Shop extends Component{
     }
 
     render(){
+        console.log("rendering shop");
         return(
             <div className="row">
                 <h1>Shop</h1>
